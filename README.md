@@ -28,7 +28,7 @@ Candidates are not required to implement the solution in code. Focus on identify
 
 Based on my experience on the task and assignment given, these are my answer:
 
-### Root Cause
+## Root Cause
 Developer are unable to fetch the database because of SQL error on Docker Image, I have been trying to create the docker image both on Windows and Mac using MySQL and MariaDB (Mac doesnt support MySQL at the moment) and still resulting error on both device.
 
 #### Incomplete MySQL Initialization: 
