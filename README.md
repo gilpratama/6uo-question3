@@ -36,41 +36,79 @@ Candidates are not required to implement the solution in code. Focus on identify
 Based on my experience on the task and assignment given, these are my answer:
 
 ## Root Cause
-Developer are unable to fetch the database because of SQL error on Docker Image, I have been trying to create the docker image both on Windows and Mac using MySQL and MariaDB (Mac doesnt support MySQL at the moment) and still resulting error on both device.
+The root cause of the issue with data fetching using JavaScript's built-in fetch() function in the React app cannot be definitively determined based on the code provided, but we can identify some potential root causes and discuss them further
 
-#### Incomplete MySQL Initialization: 
-MySQL might not have been initialized correctly, which can result in missing or corrupted system tables.
+To identify the root cause, we should carefully review the client-side code, consider the factors mentioned above, and use browser developer tools or debugging techniques to inspect network requests and responses for more detailed error information.
 
-#### Incorrect MySQL Configuration: 
-The MySQL configuration might not be properly set up, leading to issues with the initialization process.
+These are the potential issue that affecting the data fetching process:
 
-## Explanation
-The error message I encountering when running docker-compose up -d mysql seems to be related to MySQL and not directly related to the React application. However, I can provide some guidance on how to approach this issue and explain the possible root cause.
+##### Server Unavailability
+One possible root cause could be that the server hosting the API is not available or not running when the React app is making fetch requests. If the server is down or experiencing issues, it won't be able to respond to client requests.
+
+##### Incorrect API Endpoint
+If the React app is trying to fetch data from an incorrect or non-existent API endpoint, it will not receive the expected data. The root cause, in this case, would be a misconfiguration of the API endpoint URL in the fetch() request.
+
+##### CORS (Cross-Origin Resource Sharing) 
+If the React app is hosted on a different domain or port than the server, CORS restrictions might be blocking the fetch requests. This could be due to improper CORS configuration on the server side or a mismatch between the client and server domains.
+
+##### Network Issues
+General network issues, such as a lack of internet connectivity or firewall restrictions, can prevent the fetch requests from reaching the server or receiving responses.
+
+##### Authentication and Authorization
+If the server requires authentication, but the fetch request is not providing valid credentials, the server may reject the request. Authentication-related issues could include incorrect tokens or missing authentication headers.
+
+##### Error Handling
+If the React app is not handling fetch errors properly, it may fail silently when a network or server error occurs. This would lead to a perception that data fetching is not working, when in fact, it's encountering errors but not reporting them.
+
+##### Response Format
+If the server is not sending responses in the expected format (e.g., not sending valid JSON when the client expects JSON data), the client-side code may fail to parse the response correctly, resulting in apparent data fetching issues.
+
+##### Testing Environment
+The issue could be specific to the testing environment setup. Ensure that the testing environment has network access to the server, and any mocking or stubbing of fetch requests in tests accurately reflects the behavior of real fetch requests.
 
 ## Resolution
 
-Check Docker Compose Configuration:
-Ensure that your docker-compose.yml configuration is correct and points to the right MySQL image and version. Double-check the configuration, especially the environment variables like MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, and others.
+To resolve the issues with data fetching using JavaScript's fetch() function, we will need to address the potential root causes mentioned earlier. Here are resolutions for each of those potential issues:
 
-#### Data Volume: 
-If you have a data volume specified in your docker-compose.yml, try removing it temporarily to rule out any potential issues with data persistence.
+##### Server Unavailability:
 
-### Initialize MySQL Properly:
-It's essential to ensure that MySQL initializes correctly. You can do this by deleting the existing MySQL data directory:
+Ensure that the server hosting the API is running and accessible.
+Check server logs for any errors or issues that might be causing downtime.
+Verify that the server is correctly configured to listen for incoming requests.
 
-`rm -rf /path/to/mysql-data-directory`
+##### Incorrect API Endpoint:
 
-Replace /path/to/mysql-data-directory with the actual path to your MySQL data directory specified in your Docker Compose file.
+Double-check and verify that the endpoint URL in your fetch() requests is accurate and matches the actual server API endpoint.
+Ensure that the endpoint path and any query parameters are correctly formed.
 
-#### Recreate MySQL Container:
-After deleting the data directory, recreate the MySQL container using docker-compose up -d mysql.
+##### CORS (Cross-Origin Resource Sharing) Issues:
 
-#### Check MySQL Container Logs:
-After recreating the container, check the container logs to see if MySQL starts without errors:
+Configure the server to allow requests from your React app's domain by setting up CORS headers.
+Make sure that the client and server domains match (including protocol, port, and domain).
+Consider using a proxy server if CORS restrictions cannot be resolved directly.
 
-`docker logs mysql`
+##### Network Issues:
 
-Look for any error messages and address them accordingly.
+Ensure that the client machine has internet connectivity and can access the server's domain.
+Check for firewall or network restrictions that may be blocking outgoing requests.
+Verify DNS settings to ensure proper domain resolution.
 
-#### Connect React App to MySQL:
-Once you have MySQL up and running without errors, ensure that your React application's configuration is correctly connecting to the MySQL instance. Check your React app's environment variables or configuration files to make sure they match the MySQL container settings.
+##### Authentication and Authorization:
+
+If authentication is required, ensure that the fetch() requests include the necessary authentication tokens or headers.
+Verify that the authentication information (e.g., tokens) is correctly generated and passed to the server.
+
+##### Error Handling:
+
+Implement proper error handling for fetch() requests in your React app. Use .catch() with fetch or a try...catch block to capture and handle errors.
+Log error messages or display user-friendly error messages when fetch requests fail.
+
+##### Response Format:
+
+Ensure that the server is sending responses in the expected format (e.g., JSON) and with the correct content type headers.
+Use .json() to parse JSON responses when processing data from fetch() requests.
+
+##### Testing Environment:
+
+Validate that your testing environment accurately simulates the behavior of real fetch() requests and responses.
+Review your testing configurations and mock/stub implementations to ensure they are correct.
